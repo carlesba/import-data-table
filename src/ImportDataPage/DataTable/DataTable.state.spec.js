@@ -3,37 +3,36 @@ import { renderHook, act } from '@testing-library/react-hooks'
 
 test("add an item", () => {
   const config = {
-    fields: [
-      { key: 'name', name: 'name' },
-      { key: 'value', name: 'value' }
-    ]
+    display: ['name', 'value'],
+    fields: {
+      name: { displayName: 'name' },
+      value: { displayName: 'value' }
+    }
   }
   const { result } = renderHook(() => useDataTable(config))
   expect(result.current.value).toEqual({
-    data: []
+    list: [],
+    data: {},
+    errors: {}
   })
   const id = "anId"
   act(() => {
     result.current.addItem(id)
   })
-  expect(result.current.value).toEqual({
-    data: [
-      { id, value: '', name: '' }
-    ]
+  expect(result.current.value.data[id]).toEqual({
+    id, value: '', name: ''
   })
 })
 
 test("remove an item", () => {
   const config = {
-    fields: [
-      { key: 'name', name: 'name' },
-      { key: 'value', name: 'value' }
-    ]
+    display: ['name', 'value'],
+    fields: {
+      name: { displayName: 'name' },
+      value: { displayName: 'value' }
+    }
   }
   const { result } = renderHook(() => useDataTable(config))
-  expect(result.current.value).toEqual({
-    data: []
-  })
   act(() => {
     result.current.addItem('a')
   })
@@ -45,24 +44,20 @@ test("remove an item", () => {
       type: 'removeItem', id: 'a'
     })
   })
-  expect(result.current.value).toEqual({
-    data: [
-      { id: 'b', value: '', name: '' }
-    ]
+  expect(result.current.value.data).toEqual({
+    b: { id: 'b', value: '', name: '' }
   })
 })
 
 test("update an item's field", () => {
   const config = {
-    fields: [
-      { key: 'name', name: 'name' },
-      { key: 'value', name: 'value' }
-    ]
+    display: ['name', 'value'],
+    fields: {
+      name: { displayName: 'name' },
+      value: { displayName: 'value' }
+    }
   }
   const { result } = renderHook(() => useDataTable(config))
-  expect(result.current.value).toEqual({
-    data: []
-  })
   act(() => {
     result.current.addItem('a')
   })
@@ -74,13 +69,12 @@ test("update an item's field", () => {
       type: 'updateItemValue',
       id: 'a',
       fieldName: "name",
-      value: "switch"
+      value: "a name",
+      config
     })
   })
-  expect(result.current.value).toEqual({
-    data: [
-      { id: 'a', value: '', name: 'switch' },
-      { id: 'b', value: '', name: '' }
-    ]
+  expect(result.current.value.data).toEqual({
+    a: { id: 'a', value: '', name: 'a name' },
+    b: { id: 'b', value: '', name: '' }
   })
 })

@@ -1,21 +1,25 @@
 import { fireEvent, render, screen } from '@testing-library/react'
 import { DataTable } from './DataTable.view'
-import { DataTableState } from './DataTable.state'
+import * as DataTableState from './models/DataTableState'
+import * as DataTableItem from './models/DataTableItem'
 
 test("render items", () => {
   const config = {
-    fields: [
-      { key: 'name', name: 'name' },
-      { key: 'value', name: 'value' }
-    ]
+    display: ['name', 'value'],
+    fields: {
+      name: { name: 'name' },
+      value: { name: 'value' },
+    }
   }
   let state = DataTableState.create()
   state = DataTableState.addItem(
-    DataTableState.createItem(config, "1"),
+    DataTableItem.create(config, "1"),
+    {},
     state
   )
   state = DataTableState.addItem(
-    DataTableState.createItem(config, "2"),
+    DataTableItem.create(config, "2"),
+    {},
     state
   )
   const change = jest.fn()
@@ -32,18 +36,21 @@ test("render items", () => {
 
 test("remove an item", () => {
   const config = {
-    fields: [
-      { key: 'name', name: 'name' },
-      { key: 'value', name: 'value' }
-    ]
+    display: ['name', 'value'],
+    fields: {
+      name: { name: 'name' },
+      value: { name: 'value' },
+    }
   }
   let state = DataTableState.create()
   state = DataTableState.addItem(
-    DataTableState.createItem(config, "a"),
+    DataTableItem.create(config, "a"),
+    {},
     state
   )
   state = DataTableState.addItem(
-    DataTableState.createItem(config, "b"),
+    DataTableItem.create(config, "b"),
+    {},
     state
   )
   const change = jest.fn()

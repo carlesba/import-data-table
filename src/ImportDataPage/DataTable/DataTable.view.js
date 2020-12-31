@@ -2,10 +2,10 @@ import { useState } from "react"
 
 export const DataTable = (props) => {
   const { value, config, onChange } = props
-  const { data } = value
+  const { data, list } = value
 
-  const handleChange = (row, fieldName, value) => {
-    onChange({ type: "updateItemValue", row, fieldName, value })
+  const handleChange = (id, fieldName, value) => {
+    onChange({ type: "updateItemValue", id, fieldName, value, config })
   }
   const handleRemove = (id) => onChange({ type: "removeItem", id })
 
@@ -13,21 +13,21 @@ export const DataTable = (props) => {
     <table>
       <thead>
         <tr style={{ outline: "1px solid black" }}>
-          {config.fields.map((field) => (
-            <th key={field.key}>{field.name}</th>
+          {config.display.map((fieldName) => (
+            <th key={fieldName}>{config.fields[fieldName].name}</th>
           ))}
           <th />
         </tr>
       </thead>
       <tbody>
-        {data.map((item, rowIndex) => (
-          <DataRow key={item.id} onRemove={() => handleRemove(item.id)}>
-            {config.fields.map((field) => (
+        {list.map((itemId) => (
+          <DataRow key={itemId} onRemove={() => handleRemove(itemId)}>
+            {config.display.map((fieldName) => (
               <DataCell
-                key={`${item.id}-${field.key}`}
-                value={item[field.key]}
+                key={`${itemId}-${fieldName}`}
+                value={data[itemId][fieldName]}
                 onChange={(newValue) =>
-                  handleChange(rowIndex, field.key, newValue)
+                  handleChange(itemId, fieldName, newValue)
                 }
               />
             ))}
