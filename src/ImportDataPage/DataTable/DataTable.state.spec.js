@@ -5,7 +5,7 @@ test("add an item", () => {
   const config = {
     display: ['name', 'value'],
     fields: {
-      name: { displayName: 'name' },
+      name: { displayName: 'name', rules: { required: true } },
       value: { displayName: 'value' }
     }
   }
@@ -21,6 +21,11 @@ test("add an item", () => {
   })
   expect(result.current.value.data[id]).toEqual({
     id, value: '', name: ''
+  })
+  expect(result.current.value.errors).toEqual({
+    [id]: {
+      name: expect.any(String)
+    }
   })
 })
 
@@ -47,13 +52,16 @@ test("remove an item", () => {
   expect(result.current.value.data).toEqual({
     b: { id: 'b', value: '', name: '' }
   })
+  expect(result.current.value.errors).toEqual({
+    b: {}
+  })
 })
 
 test("update an item's field", () => {
   const config = {
     display: ['name', 'value'],
     fields: {
-      name: { displayName: 'name' },
+      name: { displayName: 'name', rules: { required: true } },
       value: { displayName: 'value' }
     }
   }
@@ -63,6 +71,10 @@ test("update an item's field", () => {
   })
   act(() => {
     result.current.addItem('b')
+  })
+  expect(result.current.value.errors).toEqual({
+    a: { name: expect.any(String) },
+    b: { name: expect.any(String) },
   })
   act(() => {
     result.current.dispatch({
@@ -76,5 +88,9 @@ test("update an item's field", () => {
   expect(result.current.value.data).toEqual({
     a: { id: 'a', value: '', name: 'a name' },
     b: { id: 'b', value: '', name: '' }
+  })
+  expect(Object.keys(result.current.value.errors)).toEqual(["b"])
+  expect(result.current.value.errors).toEqual({
+    b: { name: expect.any(String) },
   })
 })

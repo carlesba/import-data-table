@@ -34,9 +34,8 @@ export const updateItem = (data, errors, state) => ({
     ...state.data,
     [data.id]: data
   },
-  errors: {
-    ...state.errors,
-    [data.id]: errors
-  }
+  errors: !errors
+    ? omit(data.id, state.errors)
+    : { ...state.errors, [data.id]: errors }
 })
 

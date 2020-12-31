@@ -43,7 +43,10 @@ const config = {
       }
     },
     total_cost: {
-      name: 'total cost'
+      name: 'total cost',
+      rules: {
+        numeric: true
+      }
     },
     supplier_name: {
       name: 'Supplier name',

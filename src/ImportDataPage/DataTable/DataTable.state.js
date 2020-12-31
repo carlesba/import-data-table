@@ -9,16 +9,16 @@ function reducer(state, action) {
   switch (action.type) {
     case "updateItemValue": {
       const { config, fieldName, value, id } = action
-      const item = DataTableItem.setField(
-        fieldName,
-        value,
-        state.data[id]
-      )
+
+      const item = DataTableItem.setField(fieldName, value, state.data[id])
       const rules = config.fields[fieldName]?.rules || []
-      const errors = DataTableItem.refuteItemField(
-        rules,
-        item[fieldName]
+      const fieldError = DataTableItem.refuteItemField(rules, item[fieldName])
+      const errors = DataTableItem.updateItemErrors(
+        fieldName,
+        fieldError,
+        state.errors[id]
       )
+    
       return DataTableState.updateItem(
         item,
         errors,
@@ -44,7 +44,7 @@ export function useDataTable(config) {
     const id = _id || uuid()
     const item = DataTableItem.create(config, id)
     const errors = DataTableItem.refuteItem(config, item)
-  
+
     dispatch({ type: "addItem", item, errors })
   }
 

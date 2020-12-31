@@ -2,7 +2,7 @@ import { useState } from "react"
 
 export const DataTable = (props) => {
   const { value, config, onChange } = props
-  const { data, list } = value
+  const { data, list, errors } = value
 
   const handleChange = (id, fieldName, value) => {
     onChange({ type: "updateItemValue", id, fieldName, value, config })
@@ -29,6 +29,7 @@ export const DataTable = (props) => {
                 onChange={(newValue) =>
                   handleChange(itemId, fieldName, newValue)
                 }
+                error={errors[itemId]?.[fieldName]}
               />
             ))}
           </DataRow>
@@ -49,7 +50,7 @@ function DataRow({ children, onRemove }) {
   )
 }
 
-function DataCell({ value, onChange }) {
+function DataCell({ value, onChange, error }) {
   const [state, setState] = useState(value)
   return (
     <td>
@@ -59,6 +60,7 @@ function DataCell({ value, onChange }) {
         onChange={(event) => setState(event.target.value)}
         onBlur={() => onChange(state)}
       />
+      {error && <div>{error}</div>}
     </td>
   )
 }
