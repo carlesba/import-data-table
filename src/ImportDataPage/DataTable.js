@@ -1,4 +1,5 @@
 import { useReducer, useState } from "react"
+import { v4 as uuid } from "uuid"
 
 /**
  * Item
@@ -17,11 +18,17 @@ const DataTableState = {
     return list.concat(item)
   },
 
-  createItem(config) {
+  createItem(config, id) {
     return config.fields.reduce(
-      (acc, field) => ({ ...acc, [field.key]: "" }),
+      (acc, field) => ({ ...acc, [field.key]: "", id }),
       {},
     )
+  },
+
+  removeItem(index, _list) {
+    const list = _list.concat()
+    list.splice(index, 1)
+    return list
   },
 }
 
@@ -41,9 +48,14 @@ function reducer(state, action) {
       }
     }
     case "addItem": {
-      const item = DataTableState.createItem(action.config)
+      const item = DataTableState.createItem(action.config, action.id)
       return {
         data: DataTableState.addItem(item, state.data),
+      }
+    }
+    case "removeItem": {
+      return {
+        data: DataTableState.removeItem(action.row, state.data),
       }
     }
     default:
@@ -52,11 +64,16 @@ function reducer(state, action) {
 }
 
 export function useDataTable(config) {
-  const [value, dispatch] = useReducer(reducer, initialState)
+  const [value, _dispatch] = useReducer(reducer, initialState)
 
-  console.log('value', value)
+  console.log("value", value)
 
-  const addItem = () => dispatch({ type: "addItem", config })
+  const dispatch = (event) => {
+    console.log(">", event)
+    _dispatch(event)
+  }
+  const addItem = (id) =>
+    dispatch({ type: "addItem", config, id: id || uuid() })
 
   return { value, dispatch, config, addItem }
 }
@@ -68,6 +85,7 @@ export const DataTable = (props) => {
   const handleChange = (row, fieldName, value) => {
     onChange({ type: "updateItemValue", row, fieldName, value })
   }
+  const handleRemove = (row) => onChange({ type: "removeItem", row })
 
   return (
     <table>
@@ -76,24 +94,36 @@ export const DataTable = (props) => {
           {config.fields.map((field) => (
             <th key={field.key}>{field.name}</th>
           ))}
+          <th />
         </tr>
       </thead>
       <tbody>
         {data.map((item, rowIndex) => (
-          <tr key={rowIndex} style={{ outline: "1px solid black" }}>
+          <DataRow key={item.id} onRemove={() => handleRemove(rowIndex)}>
             {config.fields.map((field) => (
               <DataCell
-                key={`${rowIndex}-${field.key}`}
+                key={`${item.id}-${field.key}`}
                 value={item[field.key]}
                 onChange={(newValue) =>
                   handleChange(rowIndex, field.key, newValue)
                 }
               />
             ))}
-          </tr>
+          </DataRow>
         ))}
       </tbody>
     </table>
+  )
+}
+
+function DataRow({ children, onRemove }) {
+  return (
+    <tr style={{ outline: "1px solid black", position: "relative" }}>
+      {children}
+      <td>
+        <button onClick={onRemove}>remove</button>
+      </td>
+    </tr>
   )
 }
 

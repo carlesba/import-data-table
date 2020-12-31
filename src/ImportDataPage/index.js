@@ -10,7 +10,7 @@ export default function ImportDataPage({ config }) {
                 config={DataTableState.config}
                 onChange={event => DataTableState.dispatch(event)}
             />
-            <button onClick={DataTableState.addItem}>add item</button>
+            <button onClick={() => DataTableState.addItem()}>add item</button>
         </div>
     )
 }
