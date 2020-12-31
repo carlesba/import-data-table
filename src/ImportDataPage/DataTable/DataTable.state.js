@@ -17,7 +17,7 @@ function reducer(state, action) {
       const rules = config.fields[fieldName]?.rules || []
       const errors = DataTableItem.refuteItemField(
         rules,
-        item
+        item[fieldName]
       )
       return DataTableState.updateItem(
         item,

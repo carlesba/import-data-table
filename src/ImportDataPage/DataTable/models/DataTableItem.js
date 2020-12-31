@@ -13,8 +13,11 @@ export const setField = (field, value, item) => ({
 })
 
 export const refuteItemField = (rules, value) => {
-  const error = rules.find(rule => {
-    return DataTableValidator.apply(rule.name, rule.options, value)
+  const error = Object.keys(rules).find(ruleName => {
+    const options = rules[ruleName] === true
+      ? {}
+      : rules[ruleName]
+    return DataTableValidator.apply(ruleName, options, value)
   })
   return error
 }
