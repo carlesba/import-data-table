@@ -47,6 +47,7 @@ export function useDataTable(config) {
 
     dispatch({ type: "addItem", item, errors })
   }
+  const hasErrors = Object.keys(value.errors).length > 0
 
-  return { value, dispatch, config, addItem }
+  return { value, dispatch, config, addItem, hasErrors }
 }

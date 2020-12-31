@@ -26,9 +26,7 @@ export const DataTable = (props) => {
               <DataCell
                 key={`${itemId}-${fieldName}`}
                 value={data[itemId][fieldName]}
-                onChange={(newValue) =>
-                  handleChange(itemId, fieldName, newValue)
-                }
+                onChange={(value) => handleChange(itemId, fieldName, value)}
                 error={errors[itemId]?.[fieldName]}
               />
             ))}
