@@ -38,7 +38,11 @@ function reducer(state, action) {
 }
 
 export function useImportTable(config) {
-  const [value, dispatch] = useReducer(reducer, initialState)
+  const [value, _dispatch] = useReducer(reducer, initialState)
+
+  const dispatch = (event) => {
+    _dispatch(event)
+  }
 
   const addItem = (_id) => {
     const id = _id || uuid()
@@ -47,8 +51,26 @@ export function useImportTable(config) {
 
     dispatch({ type: "addItem", item, errors })
   }
+
+  const dumpData = (data, itemId) => {
+    let [head, ...tail] = data
+
+    const fieldsToUpdate = config.display.slice(-head.length)
+    fieldsToUpdate.forEach((fieldName, index) => {
+      const value = head[index]
+      dispatch({ type: 'updateItemValue', fieldName, config, id: itemId, value })
+    })
+
+    tail.forEach(values => {
+      const id = uuid()
+      const item = ImportTableItem.createWithValues(config, id, values)
+      const errors = ImportTableItem.refuteItem(config, item)
+      dispatch({ type: "addItem", item, errors })
+    })
+  }
+
   const hasErrors = Object.keys(value.errors).length > 0
   const isEmpty = value.list.length === 0
 
-  return { value, dispatch, config, addItem, hasErrors, isEmpty }
+  return { value, dispatch, config, addItem, hasErrors, isEmpty, dumpData }
 }

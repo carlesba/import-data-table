@@ -7,12 +7,17 @@ const omit = (key, _data) => {
 }
 
 export const create = (config, id) => {
-  return Object.keys(config.fields).reduce(
+  return config.display.reduce(
     (acc, field) => ({ ...acc, [field]: "", id }),
     {},
   )
 }
-
+export const createWithValues = (config, id, values) => {
+  return config.display.reduce(
+    (acc, field, index) => ({ ...acc, [field]: values[index] || "", id }),
+    {},
+  )
+}
 export const setField = (field, value, item) => ({
   ...item,
   [field]: value

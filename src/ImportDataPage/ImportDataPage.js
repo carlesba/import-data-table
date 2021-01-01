@@ -41,6 +41,7 @@ export default function ImportDataPage({ config, _client = defaultClient }) {
 
     const updateTable = event => ImportTableState.dispatch(event)
     const addItem = () => ImportTableState.addItem()
+    const dumpData = (data, itemId) => ImportTableState.dumpData(data, itemId)
     const handleSubmit = async () => {
         const serverData = serverDataFromImportTable(ImportTableState.value)
         const [, error] = await Server.submit(serverData)
@@ -65,6 +66,7 @@ export default function ImportDataPage({ config, _client = defaultClient }) {
                 value={ImportTableState.value}
                 config={ImportTableState.config}
                 onChange={updateTable}
+                onDumpData={dumpData}
             />
         </Page>
     )

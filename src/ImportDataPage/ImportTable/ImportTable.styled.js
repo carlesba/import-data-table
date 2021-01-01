@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { styled } from 'Styled'
+import useUpdatableState from 'Hooks/useUpdatableState'
 
 const Stable = styled('table', {
   maxHeight: '100%',
@@ -121,8 +122,8 @@ const CellError = styled('div', {
   boxShadow: '0 1px 4px rgba(100, 100, 100, 0.2)',
   transform: "translateY(100%)"
 })
-export function Cell({ value, onChange, error }) {
-  const [state, setState] = useState(value)
+export function Cell({ value, onChange, error, onPaste }) {
+  const [state, setState] = useUpdatableState(value)
   const [focused, setFocused] = useState(false)
   const [hovered, setHovered] = useState(false)
 
@@ -135,6 +136,9 @@ export function Cell({ value, onChange, error }) {
     >
       <Input
         type="text"
+        data-testid="cell-input"
+        error={!!error}
+        empty={!value}
         value={state}
         onChange={(event) => setState(event.target.value)}
         onFocus={() => setFocused(true)}
@@ -142,8 +146,7 @@ export function Cell({ value, onChange, error }) {
           onChange(state)
           setFocused(false)
         }}
-        error={!!error}
-        empty={!value}
+        onPaste={onPaste}
       />
       {errorShown && <CellError>{error}</CellError>}
     </Td>
