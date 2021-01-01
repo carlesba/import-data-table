@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@stitches/react": "0.0.2",
     "@testing-library/jest-dom": "^5.11.8",
     "@testing-library/react": "^11.2.2",
     "@testing-library/user-event": "^12.6.0",
@@ -40,5 +41,10 @@
   "devDependencies": {
     "@testing-library/react-hooks": "^3.7.0",
     "react-test-renderer": "^17.0.1"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!@ngrx|(?!deck.gl))"
+    ]
   }
 }

@@ -22,15 +22,15 @@ const config = {
     unit_price: {
       name: 'unit price',
       rules: {
+        numeric: true,
         required: true,
-        numeric: true
       }
     },
     quantity: {
       name: 'quantity',
       rules: {
-        required: true,
-        numeric: true
+        numeric: true,
+        required: true
       }
     },
     uom: {
@@ -63,8 +63,8 @@ const config = {
     purchased_date: {
       name: 'Purchased date',
       rules: {
+        dateFormat: { format: "YYYY-MM-DD" },
         required: true,
-        dateFormat: { format: "YYYY-MM-DD" }
       }
     },
     delivery_address: {

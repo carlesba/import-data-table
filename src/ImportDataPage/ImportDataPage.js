@@ -1,5 +1,7 @@
 import { DataTable, useDataTable } from './DataTable'
 import useImportDataServer from './useImportDataServer'
+import { Page, BigButton } from 'Styled/Components'
+import { styled } from 'Styled'
 
 const defaultClient = {
     async post(url, payload) {
@@ -22,11 +24,20 @@ function serverDataFromDataTable(tableValues) {
     })
 }
 
+const Header = styled('div', {
+    diplay: 'flex',
+    flexDirection: 'horizontal'
+})
+
 export default function ImportDataPage({ config, _client = defaultClient }) {
     const DataTableState = useDataTable(config)
     const Server = useImportDataServer(_client)
 
-    const disabledSubmission = DataTableState.hasErrors || Server.loading
+    const disabledSubmission = (
+        DataTableState.hasErrors ||
+        Server.loading ||
+        DataTableState.isEmpty
+    )
 
     const updateTable = event => DataTableState.dispatch(event)
     const addItem = () => DataTableState.addItem()
@@ -41,15 +52,20 @@ export default function ImportDataPage({ config, _client = defaultClient }) {
     }
 
     return (
-        <div>
-            <h1>Import data</h1>
+        <Page
+            title="Import data"
+            header={(
+                <Header>
+                    <BigButton onClick={addItem}>add item</BigButton>
+                    <BigButton disabled={disabledSubmission} onClick={handleSubmit}>Submit</BigButton>
+                </Header>
+            )}
+        >
             <DataTable
                 value={DataTableState.value}
                 config={DataTableState.config}
                 onChange={updateTable}
             />
-            <button onClick={addItem}>add item</button>
-            <button disabled={disabledSubmission} onClick={handleSubmit}>Submit</button>
-        </div>
+        </Page>
     )
 }
