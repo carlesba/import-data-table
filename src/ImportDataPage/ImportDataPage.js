@@ -1,4 +1,4 @@
-import { DataTable, useDataTable } from './DataTable'
+import { ImportTable, useImportTable } from './ImportTable'
 import useImportDataServer from './useImportDataServer'
 import { Page, BigButton } from 'Styled/Components'
 import { styled } from 'Styled'
@@ -10,7 +10,7 @@ const defaultClient = {
         })
     }
 }
-function serverDataFromDataTable(tableValues) {
+function serverDataFromImportTable(tableValues) {
     return tableValues.list.map(id => {
         const value = tableValues.data[id]
         return {
@@ -30,19 +30,19 @@ const Header = styled('div', {
 })
 
 export default function ImportDataPage({ config, _client = defaultClient }) {
-    const DataTableState = useDataTable(config)
+    const ImportTableState = useImportTable(config)
     const Server = useImportDataServer(_client)
 
     const disabledSubmission = (
-        DataTableState.hasErrors ||
+        ImportTableState.hasErrors ||
         Server.loading ||
-        DataTableState.isEmpty
+        ImportTableState.isEmpty
     )
 
-    const updateTable = event => DataTableState.dispatch(event)
-    const addItem = () => DataTableState.addItem()
+    const updateTable = event => ImportTableState.dispatch(event)
+    const addItem = () => ImportTableState.addItem()
     const handleSubmit = async () => {
-        const serverData = serverDataFromDataTable(DataTableState.value)
+        const serverData = serverDataFromImportTable(ImportTableState.value)
         const [, error] = await Server.submit(serverData)
         if (error) {
             // notification
@@ -61,9 +61,9 @@ export default function ImportDataPage({ config, _client = defaultClient }) {
                 </Header>
             )}
         >
-            <DataTable
-                value={DataTableState.value}
-                config={DataTableState.config}
+            <ImportTable
+                value={ImportTableState.value}
+                config={ImportTableState.config}
                 onChange={updateTable}
             />
         </Page>

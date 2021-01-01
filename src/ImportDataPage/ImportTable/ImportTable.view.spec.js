@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react'
-import { DataTable } from './DataTable.view'
-import * as DataTableState from './models/DataTableState'
-import * as DataTableItem from './models/DataTableItem'
+import { ImportTable } from './ImportTable.view'
+import * as ImportTableState from './models/ImportTableState'
+import * as ImportTableItem from './models/ImportTableItem'
 
 test("render items", () => {
   const config = {
@@ -11,20 +11,20 @@ test("render items", () => {
       value: { name: 'value' },
     }
   }
-  let state = DataTableState.create()
-  state = DataTableState.addItem(
-    DataTableItem.create(config, "1"),
+  let state = ImportTableState.create()
+  state = ImportTableState.addItem(
+    ImportTableItem.create(config, "1"),
     {},
     state
   )
-  state = DataTableState.addItem(
-    DataTableItem.create(config, "2"),
+  state = ImportTableState.addItem(
+    ImportTableItem.create(config, "2"),
     {},
     state
   )
   const change = jest.fn()
   render(
-    <DataTable
+    <ImportTable
       value={state}
       config={config}
       onChange={change}
@@ -42,20 +42,20 @@ test("remove an item", () => {
       value: { name: 'value' },
     }
   }
-  let state = DataTableState.create()
-  state = DataTableState.addItem(
-    DataTableItem.create(config, "a"),
+  let state = ImportTableState.create()
+  state = ImportTableState.addItem(
+    ImportTableItem.create(config, "a"),
     {},
     state
   )
-  state = DataTableState.addItem(
-    DataTableItem.create(config, "b"),
+  state = ImportTableState.addItem(
+    ImportTableItem.create(config, "b"),
     {},
     state
   )
   const change = jest.fn()
   render(
-    <DataTable
+    <ImportTable
       value={state}
       config={config}
       onChange={change}

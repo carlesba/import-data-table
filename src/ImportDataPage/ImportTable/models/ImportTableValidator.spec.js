@@ -1,4 +1,4 @@
-import { Validators } from './DataTableValidator'
+import { Validators } from './ImportTableValidator'
 
 test("required validator", () => {
   expect(Validators.required(null, "")).toBe("Cannot be empty")

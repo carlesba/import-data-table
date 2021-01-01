@@ -1,25 +1,25 @@
 import { useReducer } from "react"
 import { v4 as uuid } from "uuid"
-import * as DataTableState from './models/DataTableState'
-import * as DataTableItem from './models/DataTableItem'
+import * as ImportTableState from './models/ImportTableState'
+import * as ImportTableItem from './models/ImportTableItem'
 
-const initialState = DataTableState.create()
+const initialState = ImportTableState.create()
 
 function reducer(state, action) {
   switch (action.type) {
     case "updateItemValue": {
       const { config, fieldName, value, id } = action
 
-      const item = DataTableItem.setField(fieldName, value, state.data[id])
+      const item = ImportTableItem.setField(fieldName, value, state.data[id])
       const rules = config.fields[fieldName]?.rules || []
-      const fieldError = DataTableItem.refuteItemField(rules, item[fieldName])
-      const errors = DataTableItem.updateItemErrors(
+      const fieldError = ImportTableItem.refuteItemField(rules, item[fieldName])
+      const errors = ImportTableItem.updateItemErrors(
         fieldName,
         fieldError,
         state.errors[id]
       )
     
-      return DataTableState.updateItem(
+      return ImportTableState.updateItem(
         item,
         errors,
         state,
@@ -27,23 +27,23 @@ function reducer(state, action) {
     }
     case "addItem": {
       const { item, errors } = action
-      return DataTableState.addItem(item, errors, state)
+      return ImportTableState.addItem(item, errors, state)
     }
     case "removeItem": {
-      return DataTableState.removeItem(action.id, state)
+      return ImportTableState.removeItem(action.id, state)
     }
     default:
       throw new Error("unexpected action: " + action.type)
   }
 }
 
-export function useDataTable(config) {
+export function useImportTable(config) {
   const [value, dispatch] = useReducer(reducer, initialState)
 
   const addItem = (_id) => {
     const id = _id || uuid()
-    const item = DataTableItem.create(config, id)
-    const errors = DataTableItem.refuteItem(config, item)
+    const item = ImportTableItem.create(config, id)
+    const errors = ImportTableItem.refuteItem(config, item)
 
     dispatch({ type: "addItem", item, errors })
   }

@@ -1,6 +1,6 @@
-import { Table, Row, Cell, Header } from './DataTable.styled'
+import { Table, Row, Cell, Header } from './ImportTable.styled'
 
-export const DataTable = (props) => {
+export const ImportTable = (props) => {
   const { value, config, onChange } = props
   const { data, list, errors } = value
 

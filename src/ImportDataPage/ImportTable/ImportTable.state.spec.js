@@ -1,4 +1,4 @@
-import { useDataTable } from './DataTable.state'
+import { useImportTable } from './ImportTable.state'
 import { renderHook, act } from '@testing-library/react-hooks'
 
 test("add an item", () => {
@@ -9,7 +9,7 @@ test("add an item", () => {
       value: { displayName: 'value' }
     }
   }
-  const { result } = renderHook(() => useDataTable(config))
+  const { result } = renderHook(() => useImportTable(config))
   expect(result.current.value).toEqual({
     list: [],
     data: {},
@@ -37,7 +37,7 @@ test("remove an item", () => {
       value: { displayName: 'value' }
     }
   }
-  const { result } = renderHook(() => useDataTable(config))
+  const { result } = renderHook(() => useImportTable(config))
   act(() => {
     result.current.addItem('a')
   })
@@ -65,7 +65,7 @@ test("update an item's field", () => {
       value: { displayName: 'value' }
     }
   }
-  const { result } = renderHook(() => useDataTable(config))
+  const { result } = renderHook(() => useImportTable(config))
   act(() => {
     result.current.addItem('a')
   })

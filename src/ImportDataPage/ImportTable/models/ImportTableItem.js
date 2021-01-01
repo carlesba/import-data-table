@@ -1,4 +1,4 @@
-import * as DataTableValidator from './DataTableValidator'
+import * as ImportTableValidator from './ImportTableValidator'
 
 const omit = (key, _data) => {
   const data = { ..._data }
@@ -24,7 +24,7 @@ export const refuteItemField = (rules, value) => {
       const options = rules[ruleName] === true
         ? {}
         : rules[ruleName]
-      const error = DataTableValidator.apply(ruleName, options, value)
+      const error = ImportTableValidator.apply(ruleName, options, value)
       if (error) {
         throw error
       }
