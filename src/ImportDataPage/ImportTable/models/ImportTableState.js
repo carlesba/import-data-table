@@ -3,6 +3,7 @@ const omit = (key, _data) => {
   delete data[key]
   return data
 }
+const empty = record => Object.keys(record).length === 0
 
 export const create = () => ({
   list: [],
@@ -16,10 +17,9 @@ export const addItem = (item, errors, state) => ({
     ...state.data,
     [item.id]: item
   },
-  errors: {
-    ...state.errors,
-    [item.id]: errors
-  }
+  errors: empty(errors)
+    ? state.errors
+    : { ...state.errors, [item.id]: errors }
 })
 
 export const removeItem = (id, state) => ({

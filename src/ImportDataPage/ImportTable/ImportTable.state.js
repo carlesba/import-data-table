@@ -41,6 +41,7 @@ export function useImportTable(config) {
   const [value, _dispatch] = useReducer(reducer, initialState)
 
   const dispatch = (event) => {
+    // console.log(event)
     _dispatch(event)
   }
 
@@ -55,11 +56,13 @@ export function useImportTable(config) {
   const dumpData = (data, itemId) => {
     let [head, ...tail] = data
 
-    const fieldsToUpdate = config.display.slice(-head.length)
-    fieldsToUpdate.forEach((fieldName, index) => {
-      const value = head[index]
-      dispatch({ type: 'updateItemValue', fieldName, config, id: itemId, value })
-    })
+    if (itemId) {
+      const fieldsToUpdate = config.display.slice(-head.length)
+      fieldsToUpdate.forEach((fieldName, index) => {
+        const value = head[index]
+        dispatch({ type: 'updateItemValue', fieldName, config, id: itemId, value })
+      })
+    }
 
     tail.forEach(values => {
       const id = uuid()
