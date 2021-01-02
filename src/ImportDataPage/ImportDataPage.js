@@ -5,6 +5,7 @@ import { Page, BigButton } from 'Styled/Components'
 import { styled } from 'Styled'
 import { DropArea } from './DropArea'
 import * as CSV from 'Data/csv'
+import { useNotify } from 'Notifications'
 
 const defaultClient = {
     async post(url, payload) {
@@ -36,24 +37,52 @@ export default function ImportDataPage({ config, _client = defaultClient }) {
     const ImportTableState = useImportTable(config)
     const Server = useImportDataServer(_client)
     const [status, setStatus] = useState('idle')
+    const notify = useNotify()
 
-    const disabledSubmission = (
+    const submissionStatus = (
         ImportTableState.hasErrors ||
         Server.loading ||
         ImportTableState.isEmpty
-    )
+    ) ? 'disabled' : ''
 
     const updateTable = event => ImportTableState.dispatch(event)
     const addItem = () => ImportTableState.addItem()
     const dumpDataHandler = (data, itemId) => ImportTableState.dumpData(data, itemId)
-    const handleSubmit = async () => {
+    const submitData = async () => {
         const serverData = serverDataFromImportTable(ImportTableState.value)
         const [, error] = await Server.submit(serverData)
         if (error) {
-            // notification
+            notify({
+                title: 'Something went wrong',
+                description: "Submission didn't succeed"
+            })
         } else {
-            // notification
+            notify({
+                title: 'Done!',
+                description: "Your data has been submitted successfully"
+            })
         }
+    }
+    const submissionHandler = () => {
+        if (ImportTableState.hasErrors) {
+            return notify({
+                title: 'The table cannot be submitted',
+                description: "Some data needs to be fixed to enable the submission"
+            })
+        }
+        if (Server.loading) {
+            return notify({
+                title: 'Hold on',
+                description: "You're data is being submitted..."
+            })
+        }
+        if (ImportTableState.isEmpty) {
+            return notify({
+                title: 'Nothing to submit',
+                description: "Add an item to submit"
+            })
+        }
+        submitData()
     }
     const dropFileHandler = async (file) => {
         setStatus('import')
@@ -61,6 +90,19 @@ export default function ImportDataPage({ config, _client = defaultClient }) {
         ImportTableState.dumpData(data)
         setStatus('idle')
     }
+    const showInformation = () => notify({
+        time: 30000,
+        title: "Instructions",
+        description: [
+            'Here you can import your data to our platform.',
+            '1. Add data manually using the buttons and the inputs in this table\n',
+            '2. Paste CSV data in one of the cells to dump more data faster\n',
+            '3. Drop your CSV file into the page to import all your data even faster\n',
+            '',
+            'To discard any message, just click on it.',
+        ]
+    })
+
     return (
         <DropArea
             types={['text/csv']}
@@ -71,8 +113,9 @@ export default function ImportDataPage({ config, _client = defaultClient }) {
                 title="Import data"
                 header={(
                     <Header>
+                        <BigButton type='info' onClick={showInformation}>How to</BigButton>
                         <BigButton onClick={addItem}>add item</BigButton>
-                        <BigButton disabled={disabledSubmission} onClick={handleSubmit}>Submit</BigButton>
+                        <BigButton status={submissionStatus} onClick={submissionHandler}>Submit</BigButton>
                     </Header>
                 )}
             >

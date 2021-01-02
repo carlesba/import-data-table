@@ -1,4 +1,5 @@
 import ImportDataPage from "./ImportDataPage";
+import { NotificationsProvider } from 'Notifications'
 
 const config = {
   display: [
@@ -77,7 +78,9 @@ const config = {
 }
 function App() {
   return (
-    <ImportDataPage config={config} />
+    <NotificationsProvider>
+      <ImportDataPage config={config} />
+    </NotificationsProvider>
   );
 }
 
