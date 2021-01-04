@@ -4,6 +4,7 @@ export default function useImportDataServer(client) {
   const [status, setStatus] = useState('idle')
 
   async function submit(data) {
+      console.log('submitting: ', data)
       setStatus('loading')
       try {
           await client.post('endpoint', data)

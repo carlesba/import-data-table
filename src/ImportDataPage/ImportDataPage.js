@@ -19,10 +19,10 @@ function serverDataFromImportTable(tableValues) {
         const value = tableValues.data[id]
         return {
             part_number: value.part_number,
-            price: value.price,
+            price: value.unit_price,
             uom: value.uom,
             supplier_name: value.supplier_name,
-            order_date: value.order_date,
+            order_date: value.purchased_date,
             delivery_address: value.delivery_address,
         }
     })
